@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import { getLogger } from 'log4js';
 import { createConnection, useContainer as useOrmContainer } from 'typeorm';
 import path from 'path';
+import { AuthService } from './auth/auth.service';
 
 async function bootstrap() {
   dotenv.config();
@@ -29,6 +30,8 @@ async function bootstrap() {
     routePrefix: '/api',
     classTransformer: true,
     validation: true,
+    authorizationChecker: AuthService.checkAuth,
+    currentUserChecker: AuthService.getCurrentUser,
   });
 
   app.listen(process.env.PORT, () => {

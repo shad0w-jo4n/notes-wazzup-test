@@ -52,4 +52,24 @@ export class UserService {
 
     return this.userRepository.save(user);
   }
+
+  /**
+   * Get user by credentials.
+   *
+   * @param {string} login
+   * @param {string} password
+   */
+  public async getUserByCredentials(login: string, password: string): Promise<User | undefined> {
+    const user = await this.getUserByLogin(login);
+
+    if (!user) {
+      return undefined;
+    }
+
+    if (!(await bcrypt.compare(password, user.password))) {
+      return undefined;
+    }
+
+    return user;
+  }
 }
