@@ -69,6 +69,15 @@ export class AuthService {
   }
 
   /**
+   * Logout and reset all sessions.
+   *
+   * @param {User} user
+   */
+  public async resetAllSessions(user: User): Promise<void> {
+    await this.tokenService.revokeTokens(user);
+  }
+
+  /**
    * Get auth service and token from HTTP header.
    *
    * @param action
