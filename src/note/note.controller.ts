@@ -3,7 +3,6 @@ import {
   CurrentUser,
   Get,
   HttpCode as HttpCodeResponse,
-  HttpError,
   JsonController,
   Param,
   Patch,
@@ -19,12 +18,14 @@ import { IndexNoteRequest } from './dto/index-note.request';
 import { IndexNoteResponse } from './dto/index-note.response';
 import { HttpCode } from '../infrastructure/http-code.enum';
 import { UpdateNoteRequest } from './dto/update-note.request';
+import { NoteAuthorizationService } from './note-authorization.service';
 
 @Service()
 @JsonController('/note')
 export class NoteController {
   constructor(
     private readonly noteService: NoteService,
+    private readonly noteAuthorizationService: NoteAuthorizationService,
   ) {}
 
   @Get()
@@ -39,15 +40,9 @@ export class NoteController {
   public async show(@Param('id') id: number, @CurrentUser() user?: User): Promise<NoteResponse> {
     const note = await this.noteService.getNoteById(id);
 
-    if (!note) {
-      throw new HttpError(HttpCode.NOT_FOUND, 'Note not found.');
-    }
+    this.noteAuthorizationService.validateForShowing(note, user);
 
-    if (!note.isShared && note.user.id !== user?.id) {
-      throw new HttpError(HttpCode.UNAUTHORIZED, 'You doesn\'t have permissions.');
-    }
-
-    return NoteResponse.buildFromNote(note);
+    return NoteResponse.buildFromNote(note!);
   }
 
   @Post()
@@ -69,14 +64,8 @@ export class NoteController {
   ): Promise<NoteResponse> {
     const note = await this.noteService.getNoteById(id);
 
-    if (!note) {
-      throw new HttpError(HttpCode.NOT_FOUND, 'Note not found.');
-    }
+    this.noteAuthorizationService.validateForChanging(note, user);
 
-    if (note.user.id !== user.id) {
-      throw new HttpError(HttpCode.UNAUTHORIZED, 'You doesn\'t have permissions.');
-    }
-
-    return NoteResponse.buildFromNote(await this.noteService.update(note.id, updateNoteRequest));
+    return NoteResponse.buildFromNote(await this.noteService.update(note!.id, updateNoteRequest));
   }
 }
