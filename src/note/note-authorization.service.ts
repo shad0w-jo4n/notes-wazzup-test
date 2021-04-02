@@ -15,7 +15,7 @@ export class NoteAuthorizationService {
    * @throws {HttpError}
    */
   public validateForShowing(note: Note | undefined, user: User | undefined): void {
-    this.checkForNoteExisting(note);
+    NoteAuthorizationService.checkForNoteExisting(note);
 
     if (!note!.isShared && note!.user.id !== user?.id) {
       throw new HttpError(HttpCode.UNAUTHORIZED, 'You doesn\'t have permissions.');
@@ -31,7 +31,7 @@ export class NoteAuthorizationService {
    * @throws {HttpError}
    */
   public validateForChanging(note: Note | undefined, user: User): void {
-    this.checkForNoteExisting(note);
+    NoteAuthorizationService.checkForNoteExisting(note);
 
     if (note!.user.id !== user.id) {
       throw new HttpError(HttpCode.UNAUTHORIZED, 'You doesn\'t have permissions.');
