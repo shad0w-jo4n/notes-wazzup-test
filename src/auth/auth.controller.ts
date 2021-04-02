@@ -13,6 +13,11 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
+  /**
+   * Get token.
+   *
+   * @param getTokenRequest
+   */
   @Post()
   public async getToken(@Body() getTokenRequest: GetTokenRequest): Promise<GetTokenResponse> {
     const token = await this.authService.authenticateUser(getTokenRequest.login, getTokenRequest.password);
@@ -20,6 +25,11 @@ export class AuthController {
     return GetTokenResponse.buildFromToken(token);
   }
 
+  /**
+   * Reset all tokens.
+   *
+   * @param user
+   */
   @Post('/reset')
   @OnUndefined(HttpCode.OK)
   public async reset(@CurrentUser({ required: true }) user: User): Promise<void> {
