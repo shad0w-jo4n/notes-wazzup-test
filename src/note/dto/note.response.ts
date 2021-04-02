@@ -1,6 +1,6 @@
 import { Note } from '../note.entity';
 
-export class CreateNoteResponse {
+export class NoteResponse {
   public id!: number;
 
   public content!: string;
@@ -11,8 +11,8 @@ export class CreateNoteResponse {
 
   public updatedAt!: Date;
 
-  public static buildFromNote(note: Note): CreateNoteResponse {
-    const response = new CreateNoteResponse();
+  public static buildFromNote(note: Note): NoteResponse {
+    const response = new NoteResponse();
 
     response.id = note.id;
     response.content = note.content;

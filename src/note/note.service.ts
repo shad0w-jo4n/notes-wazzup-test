@@ -17,6 +17,18 @@ export class NoteService {
   ) {}
 
   /**
+   * Get note by id.
+   *
+   * @param id
+   */
+  public getNoteById(id: number): Promise<Note | undefined> {
+    return this.noteRepository.findOne(id, {
+      relations: ['user'],
+      loadEagerRelations: true,
+    });
+  }
+
+  /**
    * Get user's notes.
    *
    * @param user
@@ -28,7 +40,7 @@ export class NoteService {
       take: limit,
       skip: (page - 1) * limit,
       where: {
-        user
+        user,
       },
     });
 
