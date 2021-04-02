@@ -35,7 +35,7 @@ export class NoteService {
    * @param page
    * @param limit
    */
-  public async getUserNotes(user: User, page: number = 1, limit: number = 10): Promise<PaginationResult<Note>> {
+  public async getNotesByUser(user: User, page: number = 1, limit: number = 10): Promise<PaginationResult<Note>> {
     const [ items, count ] = await this.noteRepository.findAndCount({
       take: limit,
       skip: (page - 1) * limit,

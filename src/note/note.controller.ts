@@ -45,7 +45,7 @@ export class NoteController {
     @QueryParams() indexNoteRequest: IndexNoteRequest,
     @CurrentUser({ required: true }) user: User,
   ): Promise<IndexNoteResponse> {
-    return this.noteService.getUserNotes(user, indexNoteRequest.page, indexNoteRequest.limit);
+    return this.noteService.getNotesByUser(user, indexNoteRequest.page, indexNoteRequest.limit);
   }
 
   /**
