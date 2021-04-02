@@ -42,6 +42,8 @@ export class NoteAuthorizationService {
    * Check for note existing.
    *
    * @param note
+   *
+   * @throws {HttpError}
    */
   private static checkForNoteExisting(note: Note | undefined): void {
     if (!note) {

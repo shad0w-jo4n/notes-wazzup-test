@@ -23,11 +23,23 @@ import { NoteAuthorizationService } from './note-authorization.service';
 @Service()
 @JsonController('/note')
 export class NoteController {
+  /**
+   * NoteController constructor.
+   *
+   * @param noteService
+   * @param noteAuthorizationService
+   */
   constructor(
     private readonly noteService: NoteService,
     private readonly noteAuthorizationService: NoteAuthorizationService,
   ) {}
 
+  /**
+   * Get list of user's notes.
+   *
+   * @param indexNoteRequest
+   * @param user
+   */
   @Get()
   public index(
     @QueryParams() indexNoteRequest: IndexNoteRequest,
@@ -36,6 +48,12 @@ export class NoteController {
     return this.noteService.getUserNotes(user, indexNoteRequest.page, indexNoteRequest.limit);
   }
 
+  /**
+   * Get note.
+   *
+   * @param id
+   * @param user
+   */
   @Get('/:id')
   public async show(@Param('id') id: number, @CurrentUser() user?: User): Promise<NoteResponse> {
     const note = await this.noteService.getNoteById(id);
@@ -45,6 +63,12 @@ export class NoteController {
     return NoteResponse.buildFromNote(note!);
   }
 
+  /**
+   * Create note.
+   *
+   * @param createNoteRequest
+   * @param user
+   */
   @Post()
   @HttpCodeResponse(HttpCode.CREATED)
   public async create(
@@ -56,6 +80,13 @@ export class NoteController {
     return NoteResponse.buildFromNote(note);
   }
 
+  /**
+   * Update note, also make shared.
+   *
+   * @param id
+   * @param updateNoteRequest
+   * @param user
+   */
   @Patch('/:id')
   public async update(
     @Param('id') id: number,
