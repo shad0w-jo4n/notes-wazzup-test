@@ -1,5 +1,5 @@
 import {
-  Body,
+  Body, ContentType,
   CurrentUser, Delete,
   Get,
   HttpCode as HttpCodeResponse,
@@ -61,6 +61,22 @@ export class NoteController {
     this.noteAuthorizationService.validateForShowing(note, user);
 
     return NoteResponse.buildFromNote(note!);
+  }
+
+  /**
+   * Show preview of the note.
+   *
+   * @param id
+   * @param user
+   */
+  @Get('/:id/preview')
+  @ContentType('text/plain')
+  public async preview(@Param('id') id: number, @CurrentUser() user?: User): Promise<string> {
+    const note = await this.noteService.getNoteById(id);
+
+    this.noteAuthorizationService.validateForShowing(note, user);
+
+    return note!.content;
   }
 
   /**
