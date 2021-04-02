@@ -63,4 +63,17 @@ export class NoteService {
 
     return this.noteRepository.save(note);
   }
+
+  /**
+   * Update note.
+   *
+   * @param id
+   * @param values
+   */
+  public update(id: number, values: Partial<Note>): Promise<Note> {
+    return this.noteRepository.save({
+      id,
+      ...values,
+    });
+  }
 }
