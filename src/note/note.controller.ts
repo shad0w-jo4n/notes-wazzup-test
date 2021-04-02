@@ -1,9 +1,9 @@
 import {
   Body,
-  CurrentUser,
+  CurrentUser, Delete,
   Get,
   HttpCode as HttpCodeResponse,
-  JsonController,
+  JsonController, OnUndefined,
   Param,
   Patch,
   Post,
@@ -98,5 +98,23 @@ export class NoteController {
     this.noteAuthorizationService.validateForChanging(note, user);
 
     return NoteResponse.buildFromNote(await this.noteService.update(note!.id, updateNoteRequest));
+  }
+
+  /**
+   * Delete note.
+   *
+   * @param id
+   * @param user
+   */
+  @Delete('/:id')
+  @OnUndefined(HttpCode.ACCEPTED)
+  public async delete(
+    @Param('id') id: number,
+    @CurrentUser({ required: true }) user: User,
+  ): Promise<void> {
+    const note = await this.noteService.getNoteById(id);
+
+    await this.noteAuthorizationService.validateForChanging(note, user);
+    await this.noteService.delete(note!.id);
   }
 }

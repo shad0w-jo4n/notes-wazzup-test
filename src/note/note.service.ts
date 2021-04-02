@@ -76,4 +76,13 @@ export class NoteService {
       ...values,
     });
   }
+
+  /**
+   * Delete note.
+   *
+   * @param id
+   */
+  public async delete(id: number): Promise<void> {
+    await this.noteRepository.softDelete(id);
+  }
 }
